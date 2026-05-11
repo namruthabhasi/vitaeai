@@ -28,14 +28,15 @@ export default function InterviewSimulator() {
   const searchParams = useSearchParams();
   const initialRole = searchParams.get('role') || 'Software Developer';
   const resumeId = searchParams.get('resume_id');
-
   const [session, setSession] = useState<InterviewSession | null>(null);
+
   const [role, setRole] = useState(initialRole);
   const [loading, setLoading] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [feedback, setFeedback] = useState<InterviewFeedback | null>(null);
   const [summary, setSummary] = useState<InterviewSummary | null>(null);
+
   const [questionCount, setQuestionCount] = useState(0);
 
   const startInterview = async () => {
@@ -47,6 +48,7 @@ export default function InterviewSimulator() {
         body: JSON.stringify({ role, resume_id: resumeId || undefined })
       });
       if (res.ok) {
+
         const data = await res.json();
         setSession(data);
         setCurrentQuestion(data.first_question);
@@ -66,6 +68,7 @@ export default function InterviewSimulator() {
 
   const submitAnswer = async () => {
     if (!answer.trim() || !session) return;
+
     setLoading(true);
     try {
       const res = await fetch('http://localhost:8000/api/interview/answer', {
@@ -74,6 +77,7 @@ export default function InterviewSimulator() {
         body: JSON.stringify({ session_id: session.session_id, question: currentQuestion, answer })
       });
       if (res.ok) {
+
         const data = await res.json();
         setFeedback(data);
         setCurrentQuestion(data.next_question);
@@ -102,6 +106,7 @@ export default function InterviewSimulator() {
 
   const endInterview = async () => {
     if (!session) return;
+
     setLoading(true);
     try {
       const res = await fetch('http://localhost:8000/api/interview/summary', {
@@ -110,6 +115,7 @@ export default function InterviewSimulator() {
         body: JSON.stringify({ session_id: session.session_id })
       });
       if (res.ok) {
+
         const data = await res.json();
         setSummary(data);
       } else {
@@ -161,6 +167,7 @@ export default function InterviewSimulator() {
           </ul>
 
           <button className="btn-primary" style={{ marginTop: "3rem", width: "100%", padding: "1rem", fontSize: "1.1rem" }} onClick={() => { setSummary(null); setSession(null); setQuestionCount(0); setFeedback(null); }}>
+
             Start Another Interview
           </button>
         </div>
@@ -170,6 +177,7 @@ export default function InterviewSimulator() {
 
   return (
     <div className="interview-container" style={{ maxWidth: "900px", margin: "0 auto" }}>
+
       <h1 className="page-title">AI Interview Simulator</h1>
       <p className="page-subtitle">Practice interactive interview questions specifically tailored to your role, getting real-time constructive feedback.</p>
 
@@ -186,6 +194,7 @@ export default function InterviewSimulator() {
             />
           </div>
           <button className="btn-primary" onClick={startInterview} disabled={loading} style={{ width: "100%", padding: "1rem", fontSize: "1.1rem" }}>
+
             {loading ? "Preparing Simulator..." : "Start Interview Practice"}
           </button>
         </div>
@@ -212,9 +221,9 @@ export default function InterviewSimulator() {
                 resize: "vertical", marginBottom: "2rem", background: "var(--secondary)", color: "var(--text-main)"
               }}
             />
-
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <button className="btn-primary" onClick={submitAnswer} disabled={loading || !answer.trim()} style={{ padding: "1rem 2rem", fontSize: "1.05rem" }}>
+
                 {loading ? "Evaluating Answer..." : "Submit Answer"}
               </button>
             </div>
@@ -232,12 +241,14 @@ export default function InterviewSimulator() {
                 <div>
                   <h4 style={{ color: "var(--success)", marginBottom: "1rem", fontSize: "1.1rem" }}>Strengths</h4>
                   <ul style={{ paddingLeft: "1.2rem", color: "var(--text-muted)", display: "flex", flexDirection: "column", gap: "0.5rem", lineHeight: 1.6 }}>
+
                     {feedback.strengths.map((s: string, i: number) => <li key={i}>{s}</li>)}
                   </ul>
                 </div>
                 <div>
                   <h4 style={{ color: "var(--warning)", marginBottom: "1rem", fontSize: "1.1rem" }}>Areas to Improve</h4>
                   <ul style={{ paddingLeft: "1.2rem", color: "var(--text-muted)", display: "flex", flexDirection: "column", gap: "0.5rem", lineHeight: 1.6 }}>
+
                     {feedback.improvements.map((s: string, i: number) => <li key={i}>{s}</li>)}
                   </ul>
                 </div>
@@ -246,6 +257,7 @@ export default function InterviewSimulator() {
               <div style={{ background: "rgba(67, 97, 238, 0.05)", padding: "1.5rem", borderRadius: "8px", border: "1px solid rgba(67, 97, 238, 0.2)" }}>
                 <h4 style={{ color: "var(--primary)", marginBottom: "0.5rem", fontSize: "1.05rem" }}>Example Better Answer</h4>
                 <p style={{ margin: 0, fontStyle: "italic", color: "var(--text-muted)", lineHeight: 1.6 }}>&quot;{feedback.better_answer_example}&quot;</p>
+
               </div>
             </div>
           )}

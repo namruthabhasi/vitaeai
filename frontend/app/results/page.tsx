@@ -77,6 +77,7 @@ export default function ResultsPage() {
           setData(parsed);
         }, 0);
       } catch {}
+
     }
   }, []);
 
@@ -87,6 +88,7 @@ export default function ResultsPage() {
         <h2 style={{ fontWeight: 800, fontSize: '1.5rem', marginBottom: '0.75rem' }}>No Results Yet</h2>
         <p className="text-muted text-sm mb-3">
           You haven&apos;t analyzed a resume yet. Upload your PDF to get your ATS score, feedback, and interview questions.
+
         </p>
         <Link href="/resume" className="btn btn-primary">
           Analyze My Resume

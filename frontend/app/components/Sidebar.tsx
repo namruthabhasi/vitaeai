@@ -57,12 +57,11 @@ export default function Sidebar() {
     const saved = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const isDark = saved ? saved === 'dark' : prefersDark;
-    
     // Using setTimeout to avoid synchronous setState in effect warning
     setTimeout(() => {
       setDark(isDark);
     }, 0);
-    
+
     document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
   }, []);
 

@@ -17,6 +17,8 @@ export default function ResumePage() {
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState('');
 
+
+
   /* ── Drag handlers ── */
   const onDragOver  = (e: DragEvent) => { e.preventDefault(); setDragging(true); };
   const onDragLeave = () => setDragging(false);
@@ -64,6 +66,7 @@ export default function ResumePage() {
     } catch {
       // Fallback: use mock resume_id and continue
       rid = 'mock-' + Date.now();
+
     }
 
     setProgress(60);
@@ -80,6 +83,7 @@ export default function ResumePage() {
       setProgress(90);
 
       let analysis: Record<string, unknown>;
+
       if (analyzeRes.ok) {
         analysis = await analyzeRes.json();
       } else {
@@ -89,6 +93,7 @@ export default function ResumePage() {
 
       // Generate interview questions
       let questions: Record<string, unknown> | null = null;
+
       try {
         const qRes = await fetch(`${API}/interview/generate-questions`, {
           method: 'POST',
@@ -108,6 +113,7 @@ export default function ResumePage() {
       setTimeout(() => router.push('/results'), 600);
 
     } catch {
+
       const mockAnalysis = getMockAnalysis(rid);
       const mockQuestions = getMockQuestions();
       setProgress(100);
